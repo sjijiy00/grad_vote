@@ -17,7 +17,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            /* 글씨체는 요청하신 기본 고딕체 유지 */
             font-family: "Malgun Gothic", "맑은 고딕", apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: #3e4a5b;
@@ -30,7 +29,6 @@
             margin: 0 auto;
             background: var(--card-bg);
             padding: 28px 24px;
-            /* 테두리를 더 둥글게 만들어 귀여운 느낌 부여 */
             border-radius: 24px;
             box-shadow: 0 8px 24px rgba(90, 127, 168, 0.15);
         }
@@ -94,7 +92,6 @@
             font-weight: 600;
         }
 
-        /* 🐥 오리가 걸어가는 귀여운 진행바 */
         .progress-container {
             background: #e2e8f0;
             border-radius: 20px;
@@ -111,7 +108,6 @@
             position: relative;
         }
 
-        /* 진행 바 끝에 쫑쫑 따라오는 아기 오리 */
         .progress-bar::after {
             content: "🐥";
             position: absolute;
@@ -164,7 +160,6 @@
             background: #ffffff;
         }
 
-        /* 동글동글 쫀득한 느낌의 버튼 스타일 */
         .btn {
             border: 2px solid #e2e8f0;
             padding: 12px 0;
@@ -179,7 +174,6 @@
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* 버튼을 누를 때 쏙 들어가는 귀여운 모션 */
         .btn:active {
             transform: scale(0.93);
         }
@@ -241,9 +235,9 @@
 </div>
 
 <script>
-    // 💡 [중요] 여기 두 항목을 내 정보에 맞게 꼭 수정해 주세요!
-    const GITHUB_USER = "YOUR_GITHUB_USERNAME"; // 예: "hong123"
-    const GITHUB_REPO = "YOUR_REPO_NAME";       // 예: "photo-vote"
+    // 💡 유저 정보 자동 반영 완료! 추가 수정이 필요 없습니다.
+    const GITHUB_USER = "sjijiy00"; 
+    const GITHUB_REPO = "grad_vote";       
 
     let photos = [];
     const votes = {};
