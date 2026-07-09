@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사진 투표 프로그램</title>
+    <style>
+        :root {
+            --primary: #5a7fa8;     /* 차분한 회색빛 하늘색 */
+            --bg: #dbe2e9;          /* 회색빛 섞인 부드러운 하늘색 배경 */
+            --card-bg: #ffffff;
+            --best: #ff6b81;        /* 귀여운 핑크빛 하트 색상 */
+            --hold: #ffb84d;        /* 따뜻한 옐로우 골드 */
+            --out: #a0aec0;         /* 소프트한 그레이 */
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            /* 글씨체는 요청하신 기본 고딕체 유지 */
+            font-family: "Malgun Gothic", "맑은 고딕", apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: #3e4a5b;
+            padding: 24px 16px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 28px 24px;
+            /* 테두리를 더 둥글게 만들어 귀여운 느낌 부여 */
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(90, 127, 168, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .desc {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+            background: #f4f7f9;
+            padding: 18px;
+            border-radius: 16px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+        
+        .progress-wrapper {
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #5a7fa8;
+            margin-bottom: 8px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* 🐥 오리가 걸어가는 귀여운 진행바 */
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 20px;
+            height: 12px;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #8baecf, var(--primary));
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            position: relative;
+        }
+
+        /* 진행 바 끝에 쫑쫑 따라오는 아기 오리 */
+        .progress-bar::after {
+            content: "🐥";
+            position: absolute;
+            right: -12px;
+            top: -10px;
+            font-size: 20px;
+            transition: all 0.4s;
+        }
+
+        .photo-card {
+            border: 2px solid #f0f4f8;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 28px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .photo-info {
+            padding: 12px 16px;
+            background: #f8fafc;
+            font-weight: 600;
+            font-size: 14px;
+            color: #5a6a85;
+            border-bottom: 2px solid #f0f4f8;
+        }
+
+        .photo-wrapper {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 16px;
+            background: #ffffff;
+        }
+
+        /* 동글동글 쫀득한 느낌의 버튼 스타일 */
+        .btn {
+            border: 2px solid #e2e8f0;
+            padding: 12px 0;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #ffffff;
+            font-size: 14px;
+            text-align: center;
+            color: #64748b;
+            font-family: inherit;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* 버튼을 누를 때 쏙 들어가는 귀여운 모션 */
+        .btn:active {
+            transform: scale(0.93);
+        }
+        
+        .btn-best.active { background: var(--best); color: white; border-color: var(--best); box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3); }
+        .btn-hold.active { background: var(--hold); color: white; border-color: var(--hold); box-shadow: 0 4px 10px rgba(255, 184, 77, 0.3); }
+        .btn-out.active { background: var(--out); color: white; border-color: var(--out); box-shadow: 0 4px 10px rgba(160, 174, 192, 0.3); }
+        
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            font-family: inherit;
+            box-shadow: 0 6px 16px rgba(90, 127, 168, 0.3);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #46658a;
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .status-msg { text-align: center; color: var(--primary); font-weight: bold; margin: 20px 0; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✨ 사진 선호도 투표 ✨</h1>
+    <p class="desc">마음에 드는 사진에 소중한 투표를 남겨주세요!</p>
+
+    <div class="input-group">
+        <label for="voter-name">📝 투표자 이름</label>
+        <input type="text" id="voter-name" placeholder="이름을 입력해 주세요" required>
+    </div>
+
+    <div class="progress-wrapper">
+        <div class="progress-text" id="progress-text">사진을 열심히 불러오고 있어요...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    <div id="status-message" class="status-msg">잠시만 기다려 주세요... 🧭</div>
+    <div id="photo-list"></div>
+
+    <button class="submit-btn" onclick="submitVotes()">📬 투표 완료하고 결과 복사하기</button>
+</div>
+
+<script>
+    // 💡 [중요] 여기 두 항목을 내 정보에 맞게 꼭 수정해 주세요!
+    const GITHUB_USER = "YOUR_GITHUB_USERNAME"; // 예: "hong123"
+    const GITHUB_REPO = "YOUR_REPO_NAME";       // 예: "photo-vote"
+
+    let photos = [];
+    const votes = {};
+
+    async function loadPhotosFromGithub() {
+        const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/`;
+        const statusMsg = document.getElementById('status-message');
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('저장소 정보를 가져오지 못했습니다.');
+            
+            const files = await response.json();
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+            
+            photos = files
+                .filter(file => {
+                    if (file.type !== 'file') return false;
+                    const nameLower = file.name.toLowerCase();
+                    return imageExtensions.some(ext => nameLower.endsWith(ext));
+                })
+                .sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}))
+                .map(file => file.name);
+
+            if (photos.length === 0) {
+                statusMsg.innerHTML = "⚠️ 저장소에 사진 파일이 보이지 않아요!<br>사진들을 업로드해 주셨나요?";
+                document.getElementById('progress-text').innerText = "사진 없음";
+                return;
+            }
+
+            statusMsg.style.display = 'none';
+            renderPhotos();
+            
+        } catch (error) {
+            console.error(error);
+            statusMsg.innerHTML = "❌ 정보를 불러오지 못했습니다.<br>아이디와 저장소 이름 설정을 확인해 주세요!";
+        }
+    }
+
+    function renderPhotos() {
+        const listContainer = document.getElementById('photo-list');
+        document.getElementById('progress-text').innerText = `남은 투표: 0 / ${photos.length} 🐥`;
+        
+        photos.forEach((src, index) => {
+            const photoNum = index + 1;
+            const card = document.createElement('div');
+            card.className = 'photo-card';
+            card.innerHTML = `
+                <div class="photo-info">📷 사진 ${photoNum}번 / 총 ${photos.length}장</div>
+                <div class="photo-wrapper">
+                    <img src="${src}" alt="사진 ${photoNum}" onerror="this.src='https://placehold.co/400x300?text=이미지+준비+중'">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-best" onclick="selectVote(${photoNum}, '베스트', this)">❤️ 베스트</button>
+                    <button class="btn btn-hold" onclick="selectVote(${photoNum}, '보류', this)">🧡 보류</button>
+                    <button class="btn btn-out" onclick="selectVote(${photoNum}, '아웃', this)">🤍 아웃</button>
+                </div>
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    function selectVote(photoNum, type, element) {
+        votes[photoNum] = type;
+        const buttons = element.parentElement.querySelectorAll('.btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+        
+        const votedCount = Object.keys(votes).length;
+        document.getElementById('progress').style.width = `${(votedCount / photos.length) * 100}%`;
+        document.getElementById('progress-text').innerText = `진행도: ${votedCount} / ${photos.length} 🐥`;
+    }
+
+    function submitVotes() {
+        const name = document.getElementById('voter-name').value.trim();
+        if (!name) {
+            alert('투표자 이름을 꼭 적어주세요! ✏️');
+            document.getElementById('voter-name').focus();
+            return;
+        }
+
+        const votedCount = Object.keys(votes).length;
+        if (votedCount < photos.length) {
+            if(!confirm(`아직 결정하지 않은 사진이 있어요! (${votedCount}/${photos.length} 완료)\n이대로 투표를 끝내고 결과를 복사할까요?`)) return;
+        }
+
+        let resultText = `[투표 결과] ${name}님\n`;
+        photos.forEach((file, index) => {
+            const num = index + 1;
+            resultText += `${num}번(${file}): ${votes[num] || "미투표"}\n`;
+        });
+
+        navigator.clipboard.writeText(resultText).then(() => {
+            alert(`🎉 투표 결과 복사 완료!\n클립보드에 결과가 쏙 복사되었습니다.\n\n카톡방에 [붙여넣기]해서 보내주세요!`);
+        }).catch(err => {
+            alert('자동 복사가 안 되었네요! 아래 결과를 드래그해서 복사해 주세요.\n\n' + resultText);
+        });
+    }
+
+    window.onload = loadPhotosFromGithub;
+</script>
+</body>
+</html>
