@@ -123,7 +123,7 @@
             overflow: hidden;
             margin-bottom: 28px;
             background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12 rgba(0,0,0,0.02);
             transition: transform 0.2s;
         }
 
@@ -136,20 +136,23 @@
             border-bottom: 2px solid #f0f4f8;
         }
 
+        /* 🖼️ 원본 비율 유지 기능 적용 */
         .photo-wrapper {
             width: 100%;
-            aspect-ratio: 4/3;
-            background: #f1f5f9;
+            background: #f8fafc; /* 사진 여백을 채워줄 깔끔하고 연한 배경색 */
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding: 12px; /* 사진 주위에 미세한 여백을 주어 고급스러운 느낌 부여 */
         }
 
         .photo-wrapper img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            max-height: 500px; /* 세로가 너무 긴 사진이 화면을 가득 채우지 않도록 최대 높이 제한 */
+            object-fit: contain; /* 💡 사진이 절대 잘리지 않고 원본 비율 그대로 보이게 설정 */
+            border-radius: 12px; /* 사진 자체 모서리도 부드럽게 */
         }
         
         .btn-group {
@@ -235,7 +238,6 @@
 </div>
 
 <script>
-    // 💡 유저 정보 자동 반영 완료! 추가 수정이 필요 없습니다.
     const GITHUB_USER = "sjijiy00"; 
     const GITHUB_REPO = "grad_vote";       
 
